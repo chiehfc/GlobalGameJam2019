@@ -25,8 +25,17 @@ public class Object : MonoBehaviour
     {
         // Gives you material.
         Debug.Log("Materials!!!");
-        MaterialsManager.instance.materials[(int)Materials.Wood] += materialsCount[(int)Materials.Wood];
-        MaterialsManager.instance.materials[(int)Materials.Metal] += materialsCount[(int)Materials.Metal];
+        if (materialsCount[(int)Materials.Wood] > 0)
+        {
+            MaterialsManager.instance.materials[(int)Materials.Wood] += materialsCount[(int)Materials.Wood];
+            InventorySystem.instance.AddItem(InventorySystem.instance.item[0], materialsCount[(int)Materials.Wood]);
+        }
+        if (materialsCount[(int)Materials.Metal] > 0)
+        {
+            MaterialsManager.instance.materials[(int)Materials.Metal] += materialsCount[(int)Materials.Metal];
+            InventorySystem.instance.AddItem(InventorySystem.instance.item[1], materialsCount[(int)Materials.Metal]);
+        }
+
 
         // Destroy object or change object's state.
         Destroy(gameObject);

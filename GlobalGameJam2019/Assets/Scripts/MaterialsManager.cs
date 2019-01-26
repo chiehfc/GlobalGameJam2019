@@ -33,4 +33,9 @@ public class MaterialsManager : MonoBehaviour
         materialsText[(int)Materials.Wood].text = materials[(int)Materials.Wood].ToString();
         materialsText[(int)Materials.Metal].text = materials[(int)Materials.Metal].ToString();
     }
+
+    public int GetMaterial(Materials material)
+    {
+        return materials[(int)material];
+    }
 }
