@@ -57,7 +57,13 @@ public class InventorySystem : MonoBehaviour
         for (int i = 0; i < listOfItems.Count; i++)
         {
             //items[i].image = item[i].itemImage;
-            items[i].GetComponentInChildren<Text>().text = item[i].itemCount.ToString();
+            items[i].GetComponentsInChildren<Text>()[0].text = listOfItems[i].itemCount.ToString();
+            items[i].GetComponentsInChildren<Text>()[1].text = listOfItems[i].itemName;
+            items[i].gameObject.SetActive(true);
+        }
+        for(int i=listOfItems.Count; i<16;i++)
+        {
+            items[i].gameObject.SetActive(false);
         }
 
         if (Input.GetKeyDown(KeyCode.B))
@@ -84,9 +90,13 @@ public class InventorySystem : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.V))
         {
-            Instantiate(placeObject, placeObject.transform.position, placeObject.transform.rotation);
-            //placeObject.transform.parent = null;
-            placeObject = null;
+            if (placeObject)
+            {
+                GameObject go = Instantiate(placeObject, placeObject.transform.position, placeObject.transform.rotation);
+                go.AddComponent<Rigidbody>();
+                //placeObject = null;
+                Destroy(placeObject);
+            }
         }
     }
 
@@ -121,7 +131,7 @@ public class InventorySystem : MonoBehaviour
         // Add highlight for selection
         //if (numberOfItemSelected < 3)
         //{
-        if (buttonNumber < listOfItems.Count)
+        if (buttonNumber < listOfItems.Count && listOfItems[buttonNumber].itemCount > 0)
         {
             Image image = items[buttonNumber].GetComponentsInChildren<Image>()[1].GetComponent<Image>();
             if (!image.isActiveAndEnabled)
@@ -162,8 +172,17 @@ public class InventorySystem : MonoBehaviour
             numberOfItemSelected = 0;
             Debug.Log("Combine!");
             // Add new combined item
+            // Check recipe 
+            for(int i=0;i<item.Length;i++)
+            {
+                if(item[i].itemName == "Plastic")
+                {
+                    AddItem(item[i], 1);
+                    listOfItems.Add(item[i]);
+                }
+            }
 
-            
+
         }
     }
     public void Place()
@@ -175,6 +194,9 @@ public class InventorySystem : MonoBehaviour
                 Image image = items[i].GetComponentsInChildren<Image>()[1].GetComponent<Image>();
                 if (image.isActiveAndEnabled)
                 {
+                    listOfItems[i].itemCount--;
+                    image.enabled = false;
+                    numberOfItemSelected = 0;
                     GameObject go = Instantiate(listOfItems[i].model, fpController.transform);
                     placeObject = go;
                     //go.transform.position = Vector3.forward*2;
